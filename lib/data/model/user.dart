@@ -6,7 +6,7 @@ class User {
   String? userPicUrl;
   String? location;
   bool? distinguish;
-  DateTime? userCreatedAt;
+  String? userCreatedAt;
 
   User(
       {this.id,

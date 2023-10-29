@@ -3,6 +3,7 @@ import 'package:logger/logger.dart';
 import 'package:team_project/_core/constants/http.dart';
 import 'package:team_project/data/dto/product_request.dart';
 import 'package:team_project/data/dto/response_dto.dart';
+import 'package:team_project/data/model/product.dart';
 
 import '../mock/product.dart';
 
@@ -11,8 +12,26 @@ class ProductRepository {
     return Future.delayed(Duration(seconds: 3), () => productList);
   }
 
-  Future<Product> fetchProductDetail() {
-    return Future.delayed(Duration(seconds: 3), () => product);
+  Future<ResponseDTO> fetchProductDetail(int id) async {
+    Logger().d("fetchProductDetail메소드로 들어왔어요!");
+    try {
+      // 통신
+      Response response = await dio.get(
+        "/product/$id",
+      );
+      Logger().d("response : ${response}");
+
+      // 응답 받은 데이터 파싱
+      ResponseDTO responseDTO = ResponseDTO.fromJson(response.data);
+      Logger().d("responseDTO : ${responseDTO}");
+
+      responseDTO.response = Product.fromJson(responseDTO.response);
+      Logger().d("responseDTO : ${responseDTO.response}");
+
+      return responseDTO;
+    } catch (e) {
+      return ResponseDTO(false, "게시글 한건 불러오기 실패", null);
+    }
   }
 
   // 통신
@@ -26,6 +45,13 @@ class ProductRepository {
 
       Response<dynamic> response =
           await dio.post("/product/write", data: productWriteDTO.toJson());
+      if (response.statusCode == 200) {
+        // 성공적인 응답을 받았을 때의 처리
+        print("서버 응답: ${response.data}");
+      } else {
+        // 오류 응답을 처리
+        print("서버 오류 응답: ${response.statusCode}");
+      }
       Logger().d("4단계 진입 - 파싱과 바인딩이 시작이에요 ! 중간 과정이니 조금만 더 힘내요 !");
       Logger().d("${response}");
 

@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:team_project/ui/pages/product/list_page/list_page_widgets/product_list_item_detail.dart';
+import 'dart:convert';
 
-import '../../../../../data/mock/product.dart';
+import 'package:flutter/material.dart';
+import 'package:team_project/data/model/product.dart';
+import 'package:team_project/ui/pages/product/list_page/list_page_widgets/product_list_item_detail.dart';
 
 class ProductListItem extends StatelessWidget {
   final Product product;
@@ -18,15 +19,16 @@ class ProductListItem extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(10.0),
-              child: Image.network(
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQZLiGudoUsUt6WTpM1XBrSyob4g1m2WWAyhQ&usqp=CAU",
+              child: Image.memory(
+                base64.decode(
+                    product.productPics[0].productPicUrl), // 디코딩된 이미지 데이터
                 width: 115,
                 height: 115,
                 fit: BoxFit.cover,
               ),
             ),
             const SizedBox(width: 16.0),
-            ProductListItemDetail(product)
+            Expanded(child: ProductListItemDetail(product))
           ],
         ),
       ),

@@ -6,6 +6,7 @@ import 'package:team_project/ui/pages/product/list_page/post_list_view_model.dar
 import 'package:team_project/ui/pages/product/write_page/product_write_store.dart';
 import 'package:team_project/ui/pages/product/write_page/widgets/product_write_form.dart';
 
+// TODO 데이터가 한번 save 이후 2번째 save때부턴 메소드가 안먹힘
 class ProductWriteBody extends StatelessWidget {
   ProductWriteBody({super.key});
 

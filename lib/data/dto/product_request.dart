@@ -4,7 +4,7 @@ class ProductWriteDTO {
   final String productName;
   final String description;
   final int price;
-  final int userId = 1;
+  final int userId = 2;
   final DateTime createdAt = DateTime.now();
   final List<String> photoList;
 
