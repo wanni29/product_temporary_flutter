@@ -1,6 +1,3 @@
-import 'dart:io';
-
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:team_project/data/mock/dummy.dart';
 import 'package:team_project/data/model/product_pic.dart';
 import 'package:team_project/data/model/user.dart';
@@ -47,9 +44,7 @@ class Product {
         productPrice = json["productPrice"],
         createdAt = json["createdAt"],
         user = User.fromJson(json["user"]),
-        productPics = (json["productPics"] as List<dynamic>)
-            .map((item) => ProductPic.fromJson(item))
-            .toList();
+        productPics = (json["productPics"] as List<dynamic>).map((item) => ProductPic.fromJson(item)).toList();
 
   // String getUpdated() {
   //   // 출력시 -> 값을 Oct 23 이렇게 만든다.

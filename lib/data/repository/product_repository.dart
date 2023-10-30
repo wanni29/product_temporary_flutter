@@ -5,9 +5,11 @@ import 'package:team_project/data/dto/product_request.dart';
 import 'package:team_project/data/dto/response_dto.dart';
 import 'package:team_project/data/model/product.dart';
 
-import '../mock/product.dart';
-
 class ProductRepository {
+  // TODO - 토큰은 기간이 만료되어서 값이 바뀔수 있기때문에 날마다 아침에 체크바랍니다!
+  String jwt =
+      "Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjYXJyb3Qta2V5IiwiaWQiOjEsInVzZXJuYW1lIjoic3NhciIsImV4cCI6MTY5OTIzMDc2Mn0.5Qeh5s_l8lBvB94ckTNPSHPg5RYsU67Rpp0slZf3plHZiTAkhDuK1NtJ-Zor6PmpeBhEHBlWBfM6EqcUF737fw";
+
   Future<List<Product>> fetchProductList() {
     return Future.delayed(Duration(seconds: 3), () => productList);
   }
@@ -16,9 +18,7 @@ class ProductRepository {
     Logger().d("fetchProductDetail메소드로 들어왔어요!");
     try {
       // 통신
-      Response response = await dio.get(
-        "/product/$id",
-      );
+      Response response = await dio.get("/products/${id}", options: Options(headers: {"Authorization": "${jwt}"}));
       Logger().d("response : ${response}");
 
       // 응답 받은 데이터 파싱
@@ -44,7 +44,7 @@ class ProductRepository {
       Logger().d("${productWriteDTO.description}");
 
       Response<dynamic> response =
-          await dio.post("/product/write", data: productWriteDTO.toJson());
+          await dio.post("/products/write", options: Options(headers: {"Authorization": "${jwt}"}), data: productWriteDTO.toJson());
       if (response.statusCode == 200) {
         // 성공적인 응답을 받았을 때의 처리
         print("서버 응답: ${response.data}");
@@ -52,40 +52,6 @@ class ProductRepository {
         // 오류 응답을 처리
         print("서버 오류 응답: ${response.statusCode}");
       }
-      Logger().d("4단계 진입 - 파싱과 바인딩이 시작이에요 ! 중간 과정이니 조금만 더 힘내요 !");
-      Logger().d("${response}");
-
-      ResponseDTO responseDTO = ResponseDTO.fromJson(response.data);
-      Logger().d("5단계 진입 - 거의 다 왔어요 ! 조금만 더 힘내요 !");
-      Logger().d("${responseDTO}");
-
-      return responseDTO;
-    } catch (e) {
-      return ResponseDTO(false, "상품을 등록할수없습니다.", null);
-    }
-  }
-
-  Future<ResponseDTO> sendMixedFormData(ProductWriteDTO productWriteDTO) async {
-    final dio = Dio(BaseOptions(
-      baseUrl: "http://192.168.0.17:8080",
-      contentType: Headers.formUrlEncodedContentType, // Content-Type 설정
-    ));
-
-    // Create FormData for x-www-urlencoded fields
-    final formData = FormData.fromMap({
-      'productPics': productWriteDTO.photoList,
-    });
-
-    try {
-      final response = await dio.post(
-        '/product/write',
-        data: formData,
-        options: Options(
-          contentType: Headers.contentEncodingHeader, // 변경된 Content-Type
-        ),
-      );
-      print('Response: ${response.data}');
-
       Logger().d("4단계 진입 - 파싱과 바인딩이 시작이에요 ! 중간 과정이니 조금만 더 힘내요 !");
       Logger().d("${response}");
 
